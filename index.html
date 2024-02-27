@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="UTF-8">
+<head>
+    <meta charset="UTF-8">
+    <title>Flightservice</title>
+    <!--Ajax is used for navigation-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+        /*Styling for navigation*/
+        #page1{display:block;}
+        #page2{display:none;background-image:url(images/ross-parmly-rf6ywHVkrlY-unsplash.jpg);background-size:cover;}
+        #page3{display:none;background-image:url(images/ross-parmly-rf6ywHVkrlY-unsplash.jpg);background-size:cover;}
+        #page4{display:none;background-image:url(images/kristopher-roller-zepnJQycr4U-unsplash.jpg);background-size:cover;}
+        #page5{display:none;background:#fff;}
+        .page{position:absolute;left:0px;top:6vh;right:0px;bottom:0px;}
+        #menu {left:0px;top:0px;z-index:500;position:absolute;height:6vh;background:#fff;right:0%;box-shadow: 0.4vw 0.4vw 1vw 0.25vw rgba(0, 0, 0, 0.1);}
+        .nav_button{margin:0.5vh;margin-top:1.5vh;padding:0.75vh;border:0;border-radius:1em;font-family: ui-serif;background:#fff;box-shadow: 0.4vw 0.4vw 1vw 0.25vw rgba(0, 0, 0, 0.1);}
+        .nav_button:hover{
+            transform:scale(1.1);
+            transition:0.25s;
+            transition-timing-function:ease;
+        }
+        #logout{display: none;}
+        #bokningshistorik{display: none;}
+        #sokflygresa{display: none;}
+        /*Styling for page 1 (Welcome)*/
+        #page1_grid1{margin: 4vw;display:grid;grid-template-columns: 1fr 1fr 1fr 1fr 1fr;}
+        .page1_content{margin:1vw;text-align:center;}
+        #page1_box1{grid-column:2/5;border-radius: 1em;background-color:#fff;box-shadow: 0.4vw 0.4vw 1vw 0.25vw rgba(0, 0, 0, 0.1);}
+        #page1_grid2{margin: 4vw;display:grid;grid-template-columns: 1fr 1fr 0.1fr 1fr 1fr;}
+        .page1_box2_img{border-top-left-radius: 4%;border-top-right-radius: 4%; width:500px; height:333.33px;}
+        .page1_box2_text{margin-left:1vw;}
+        #page1_box2{grid-column:2;margin-top: 1vw;border-radius: 1em;background-color:#fff;box-shadow: 0.4vw 0.4vw 1vw 0.25vw rgba(0, 0, 0, 0.1);}
+        #page1_box3{grid-column:4;margin-top: 1vw;border-radius: 1em;background-color:#fff;box-shadow: 0.4vw 0.4vw 1vw 0.25vw rgba(0, 0, 0, 0.1);}
+        #page1_box4{grid-column:2;grid-row:2;margin-top: 1vw;border-radius: 1em;background-color:#fff;box-shadow: 0.4vw 0.4vw 1vw 0.25vw rgba(0, 0, 0, 0.1);}
+        #page1_box5{grid-column:4;grid-row:2;margin-top: 1vw;border-radius: 1em;background-color:#fff;box-shadow: 0.4vw 0.4vw 1vw 0.25vw rgba(0, 0, 0, 0.1);}
+        #page1_box6{grid-column:2;grid-row:3;margin-top: 1vw;border-radius: 1em;background-color:#fff;box-shadow: 0.4vw 0.4vw 1vw 0.25vw rgba(0, 0, 0, 0.1);}
+        #page1_box7{grid-column:4;grid-row:3;margin-top: 1vw;border-radius: 1em;background-color:#fff;box-shadow: 0.4vw 0.4vw 1vw 0.25vw rgba(0, 0, 0, 0.1);}
+        #page1_box8{grid-column:2;grid-row:4;margin-top: 1vw;border-radius: 1em;background-color:#fff;box-shadow: 0.4vw 0.4vw 1vw 0.25vw rgba(0, 0, 0, 0.1);}
+        #page1_box9{grid-column:4;grid-row:4;margin-top: 1vw;border-radius: 1em;background-color:#fff;box-shadow: 0.4vw 0.4vw 1vw 0.25vw rgba(0, 0, 0, 0.1);}
+        .page1_box{width: 500px;}
+        .page1_box:hover{transform:scale(1.1);transition:0.25s;transition-timing-function:ease-in-out;}
+        #Animatedbox{grid-column:3;grid-row:5;margin-top: 8vh;width: 100px;height: 100px;background-color: red;animation-name: example;animation-duration: 8s;}
+        @keyframes example {from {background-color: red;}to {background-color: yellow;}}
+        #page1_footer{text-align: center;padding-bottom: 2vw;}
+        /*Styling for page 2 (Registrering)*/
+        #page2_form{margin:2vw;}
+        .page2_label{display:block;margin-top: 2vh;}
+        .page2_input{display:block;}
+        .page2_input:focus{box-shadow: 0.3vw 0.3vw 1vw #00000034;}
+        #page2_submit{margin-top: 0.5vh;padding:0.75vh;border:0;border-radius:1em;font-family: ui-serif;background:#fff;box-shadow: 0.4vw 0.4vw 1vw 0.25vw rgba(0, 0, 0, 0.17);}
+        #page2_submit:hover{transform:scale(1.1);transition:0.25s;transition-timing-function:ease;}
+        #page2_grid{margin:4vw;display:grid;grid-template-columns: 1fr 1fr 1fr;}
+        #page2_box{margin-top: 4vh;grid-column:2;border-radius: 1em;background-color:#fff;box-shadow: 0.4vw 0.4vw 1vw 0.25vw rgba(0, 0, 0, 0.1);}
+        #page2_output1{padding: 2vh;grid-row: 1;grid-column: 2;border-radius: 1em;background-color:#fff;box-shadow: 0.4vw 0.4vw 1vw 0.25vw rgba(0, 0, 0, 0.1);}
+        /*Styling for page 3 (Logga in)*/
+        #page3_grid{margin:4vw;display: grid;grid-template-columns: 1fr 1fr 1fr;}
+        #page3_box{grid-column:2;border-radius: 1em;background-color:#fff;box-shadow: 0.4vw 0.4vw 1vw 0.25vw rgba(0, 0, 0, 0.1);}
+        #page3_head{margin:2vw;}
+        #page3_form{margin:2vw;}
+        /*Styling for page 4 (Sök flygresa)*/
+        #page4_grid{margin: 4vw;display: grid;grid-template-columns: 1fr 1fr 0.15fr 0.85fr;}
+        #page4_box1{grid-column:2;border-radius: 1em;background-color:#fff;box-shadow: 0.4vw 0.4vw 1vw 0.25vw rgba(0, 0, 0, 0.1);}
+        #page4_head{margin:2vw;}
+        #page4_form{margin:2vw;display: grid; grid-template-columns: 1fr 1fr;justify-items: center;align-items: center;}
+        #page4_form_content1{grid-column: 1;margin-top: 2vh;}
+        #page4_form_content2{grid-column: 2;}
+        #page4_button{display: block;margin-top: 2vh;margin-top: 0.5vh;margin:1vw;padding:0.75vh;border:0;border-radius:1em;font-family: ui-serif;background:#fff;box-shadow: 0.4vw 0.4vw 1vw 0.25vw rgba(0, 0, 0, 0.17);}
+        #page4_button:hover{transform:scale(1.1);transition:0.25s;transition-timing-function:ease;}
+        .page4_input{display: block;}
+        #page4_box2{grid-column: 2;background-color: #fff;border-radius: 1em; display: grid;margin-top:3vh;box-shadow: 0.4vw 0.4vw 1vw 0.25vw rgba(0, 0, 0, 0.1);}
+        #page4_output1{padding: 1vh;grid-template-columns: 1fr 1fr 1fr 1fr 1fr;justify-items: center;grid-column: 2;grid-row: 2;background-color: #fff;border-radius: 1em; display: grid;margin-top:3vh;box-shadow: 0.4vw 0.4vw 1vw 0.25vw rgba(0, 0, 0, 0.1);}
+        #page4_output2{grid-column: 1;}
+        #page4_output3{grid-column: 4;}
+        .page4_output4{grid-column: 5;margin-top: 0.5vh;margin:1vw;padding:0.75vh;border:0;border-radius:1em;font-family: ui-serif;background:#fff;box-shadow: 0.4vw 0.4vw 1vw 0.25vw rgba(0, 0, 0, 0.17);}
+        .page4_output4:hover{transform:scale(1.1);transition:0.25s;transition-timing-function:ease;}
+        #page4_book1{grid-column: 2;grid-row: 3;margin-top: 3vh;background:#fff;padding: 1vw;border-radius: 1em;}
+        #page4_book2{grid-column: 2;grid-row: 4;}
+        #page4_box2content1{grid-column: 1;margin: auto;padding:1vw;}
+        #page4_box2content2{grid-column: 2;margin: auto;}
+        #page4_button{margin:0.5vh;margin-top: 3vh;padding:0.75vh;border:0;border-radius:1em;font-family: ui-serif;background:#fff;box-shadow: 0.4vw 0.4vw 1vw 0.25vw rgba(0, 0, 0, 0.1);}
+        #page4_button:hover{transform:scale(1.1);transition:0.25s;transition-timing-function:ease;}
+        /*Styling for page 5 (Bokningshistorik)*/
+        #page5_grid{margin: 4vw;display: grid;grid-template-columns: 1fr 1fr 1fr 1fr 1fr;grid-template-rows: 150px 100px 1fr;}
+        #page5_box1{grid-column:2/5;border-radius: 1em;background-color:#fff;box-shadow: 0.4vw 0.4vw 1vw 0.25vw rgba(0, 0, 0, 0.1);}
+        .page5_content{margin:1vw;}
+        #page5_button{margin-top: 0.5vh;margin:1vw;padding:0.75vh;border:0;border-radius:1em;font-family: ui-serif;background:#fff;box-shadow: 0.4vw 0.4vw 1vw 0.25vw rgba(0, 0, 0, 0.17);}
+        .page5_button:hover{transform:scale(1.1);transition:0.25s;transition-timing-function:ease;}
+        #resa{margin-bottom: 10vh;padding-left: 1vw;padding-right: 1vw;grid-column: 2/5;grid-row: 3;background: #fff;border-radius: 1em;box-shadow: 0.4vw 0.4vw 1vw 0.25vw rgba(0, 0, 0, 0.1);}
+        #page5_btn1{margin-top: 0.5vh;margin:1vw;padding:0.75vh;border:0;border-radius:1em;font-family: ui-serif;background:#fff;box-shadow: 0.4vw 0.4vw 1vw 0.25vw rgba(0, 0, 0, 0.17);}
+        #page5_btn2{margin-top: 0.5vh;margin:1vw;padding:0.75vh;border:0;border-radius:1em;font-family: ui-serif;background:#fff;box-shadow: 0.4vw 0.4vw 1vw 0.25vw rgba(0, 0, 0, 0.17);}
+    </style>
+
+</head>
+<body onload="setupHistory();">
+    <nav id="menu">
+        <button onclick="showpage('page1',false);" class="nav_button">Flightservice</button>
+        <button onclick="showpage('page2',false);" class="nav_button">Registrering</button>
+        <button onclick="showpage('page3',false);" class="nav_button">Logga in</button>
+        <button onclick="showpage('page4',false);" id="sokflygresa" class="nav_button">Sök flygresa</button>
+        <button onclick="showpage('page5',false);" id="bokningshistorik" class="nav_button">Bokningshistorik</button>
+        <button onclick="logout();" id="logout" class="nav_button">Logga ut</button>
+    </nav>
+
+    <div id="page1" class="page">
+        <div id="page1_grid1">
+            <div id="page1_box1">
+                <h1 class="page1_content">Välkommen till Flightservice!</h1>
+                <h2 class="page1_content">Här kan du boka flygresor.</h2>
+            </div>
+        </div>
+        <div id="page1_grid2">
+            <div id="page1_box2" class="page1_box">
+                <img class="page1_box2_img" src="images/secret-travel-guide-29qno14UNf4-unsplash.jpg" alt="Picture of Norway.">
+                <h3 class="page1_box2_text">Norge</h3>
+            </div>
+            <div id="page1_box3" class="page1_box">
+                <img class="page1_box2_img" src="images/patrick-EvMearrxas4-unsplash.jpg" alt="Picture of Greece.">
+                <h3 class="page1_box2_text">Grekland</h3>
+            </div>
+            <div id="page1_box4" class="page1_box">
+                <img class="page1_box2_img" src="images/jorge-fernandez-salas-ChSZETOal-I-unsplash.jpg" alt="Picture of Spain.">
+                <h3 class="page1_box2_text">Spanien</h3>
+            </div>
+            <div id="page1_box5" class="page1_box">
+                <img class="page1_box2_img" src="images/leonard-cotte-c1Jp-fo53U8-unsplash.jpg" alt="Picture of France.">
+                <h3 class="page1_box2_text">Frankrike</h3>
+            </div>
+            <div id="page1_box6" class="page1_box">
+                <img class="page1_box2_img" src="images/maria-vojtovicova-SPvJPDXEmqA-unsplash.jpg" alt="Picture of Finland.">
+                <h3 class="page1_box2_text">Finland</h3>
+            </div>
+            <div id="page1_box7" class="page1_box">
+                <img class="page1_box2_img" src="images/yves-alarie-jIk3I_e16uw-unsplash.jpg" alt="Picture of Jamaica.">
+                <h3 class="page1_box2_text">Jamaica</h3>
+            </div>
+            <div id="page1_box8" class="page1_box">
+                <img class="page1_box2_img" src="images/dan-novac-1naE8177_bI-unsplash.jpg" alt="Picture of Italy.">
+                <h3 class="page1_box2_text">Italien</h3>
+            </div>
+            <div id="page1_box9" class="page1_box">
+                <img class="page1_box2_img" src="images/sumit-chinchane-jWKk-0ZBUyg-unsplash.jpg" alt="Picture of Thailand." >
+                <h3 class="page1_box2_text">Thailand</h3>
+            </div>
+            <div id="Animatedbox"></div>
+        </div>
+        <footer>
+            <p id="page1_footer">Bilderna används under <a href="https://unsplash.com/license" target="_blank">Unsplash licensen.</a></p>
+        </footer>
+    </div>
+
+    <div id="page2" class="page">
+        <div id="page2_grid">
+            <div id="page2_output1"><h2>Registrera dig nedanför.</h2></div>
+            <div id="page2_box">
+                <form id="page2_form">
+                    <fieldset>
+                        <legend>Registrera dig</legend>
+                        <label for="kontonamn1" class="page2_label">Kontonamn:</label>
+                        <input type="text" id="kontonamn1" class="page2_input" onchange="validateText()" onkeyup="validateText()">
+                        <label for="fname" class="page2_label">Förnamn:</label>
+                        <input type="text" id="fname" class="page2_input" onchange="validateText()" oninput="validateText()">
+                        <label for="lname" class="page2_label">Efternamn:</label>
+                        <input type="text" id="lname" class="page2_input" onchange="validateText()" onclick="validateText()">
+                        <label for="mail" class="page2_label">Mailadress:</label>
+                        <input type="text" id="mail" class="page2_input" onchange="validateMail()" onkeyup="validateMail()">
+                        <label for="number" class="page2_label">Telefonnummer:</label>
+                        <input type="text" id="number" class="page2_input" onchange="validateNumber()" onkeyup="validateNumber()">
+                        <label for="scared" class="page2_label">På en skala från ett till fem, hur höjdrädd är du?</label>
+                        <input type="range" class="page2_input" min="1" max="5" id="scared">
+                        <label for="newsletter" class="page2_label">Jag vill prenummerera på nyhetsbrev.</label>
+                        <input type="checkbox" id="newsletter" class="page2_input" checked value="Ja">
+                        <input type="submit" onclick="storeCustomer(event)" id="page2_submit" value="Registrera">
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="page3" class="page">
+        <div id="page3_grid">
+            <div id="page3_box">
+                <h2 id="page3_head">Logga in.</h2>
+                <form action="" id="page3_form">
+                    <label for="kontonamn2">Kontonamn:</label>
+                    <input type="text" id="kontonamn2">
+                    <input type="submit" onclick="loginCustomer(event)" value="Logga in">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="page4" class="page">
+        <div id="page4_grid">
+            <div id="page4_box1">
+                <h2 id="page4_head">Sök flygresa.</h2>
+                <form action="" id="page4_form">
+                    <div id="page4_form_content1">
+                        <select name="" id="page4_select">
+                            <option value="" style="display:none">Välj land</option>";
+                            <option>Norge</option>
+                            <option>Grekland</option>
+                            <option>Spanien</option>
+                            <option>Frankrike</option>
+                            <option>Finland</option>
+                            <option>Jamaica</option>
+                            <option>Italien</option>
+                            <option>Thailand</option>
+                        </select>
+                    </div>
+                    <div id="page4_form_content2">
+                        <input type="submit" value="Fortsätt" onclick="getresources(event)" id="page4_button">
+                    </div>
+                </form>
+            </div>
+            <div id="page4_output1">Välj destination.</div>
+            <div id="page4_book1"></div>
+        </div>
+    </div>
+
+    <div id="page5" class="page">
+        <div id="page5_grid">
+            <div id="page5_box1">
+                <h2 class="page5_content">Mina bokningar</h2>
+                <button id="page5_button" class="page5_button" onclick="getCustomerBookings(event);makevisible()">Visa bokade flygbiljetter</button>
+                <button id="page5_btn2" class="page5_button" onclick="makehidden()">Dölj</button>
+            </div>
+            <div id="resa">
+                <p id="page5_content">Visa innehåll genom att klicka på knappen ovanför.</p>
+            </div>
+        </div>
+    </div>
+    <script lang="Javascript">
+
+        //Animation
+        function makehidden(){
+            document.getElementById("resa").style.visibility = "hidden";
+        }
+        function makevisible(){
+            document.getElementById("resa").style.visibility = "visible";
+        }
+
+        // Navigation
+        function showpage(pageid, isHistory)
+        {
+            $(".page").css("display","none");
+            $("#"+pageid).css("display","block");
+            if(isHistory == false){
+                updateHistory(pageid);
+            }
+        }
+
+        // History API
+        function historyChange(event){
+            if(event.state == null){
+                showpage("page1");
+            }
+            else{
+                showpage(event.state, true);
+            }
+        }
+        function updateHistory(token){
+            history.pushState(token, "Titel: "+token, "");
+        }
+        function setupHistory(){
+            window.onpopstate = function(event) { historyChange(event); };
+        }
+
+        // Validation
+        let validate1 = false;
+        let validate2 = false;
+        let validate3 = false;
+        let validate4 = false;
+        let validate5 = false;
+        function buttonOn(){
+            if(validate1 == true && validate2 == true && validate3 == true && validate4 == true && validate5 == true){
+                document.querySelector('#page2_submit').disabled = false;
+            }
+        }
+        function buttonOff(){
+            document.querySelector('#page2_submit').disabled = true;
+        }
+        function validateText(){
+            let textinput1 = document.getElementById("kontonamn1");
+            let textinput2 = document.getElementById("fname");
+            let textinput3 = document.getElementById("lname");
+            let value1=textinput1.value;
+            let value2=textinput2.value;
+            let value3=textinput3.value;
+            // Match is null if there is no match
+            if(value1.match(/^\d+$/)!=null){
+                textinput1.style.backgroundColor = "#f57";
+                buttonOff();
+                validate1 = false;
+            }
+            else{
+                textinput1.style.backgroundColor = "#cfa";
+                buttonOn();
+                validate1 = true;
+            }
+            if(value2.match(/^\d+$/)!=null){
+                textinput2.style.backgroundColor = "#f57";
+                buttonOff();
+                validate2 = false;
+            }
+            else{
+                textinput2.style.backgroundColor = "#cfa";
+                buttonOn();
+                validate2 = true;
+            }
+            if(value3.match(/^\d+$/)!=null){
+                textinput3.style.backgroundColor = "#f57";
+                buttonOff();
+                validate3 = false;
+            }
+            else{
+                textinput3.style.backgroundColor = "#cfa";
+                buttonOn();
+                validate3 = true;
+            }
+        }
+        function validateMail()
+        {
+            let textinput = document.getElementById("mail");
+            if(textinput.value.indexOf("@")!=-1){
+                textinput.style.backgroundColor = "#cfa";
+                buttonOn();
+                validate4 = true;
+            }
+            else{
+                textinput.style.backgroundColor = "#f57";
+                buttonOff();
+                validate4 = false;
+            }
+        }
+        function validateNumber(){
+            let textinput = document.getElementById("number");
+            let val=textinput.value;
+            // Match is null if there is no match
+            if(val.match(/^\d+$/)!=null){
+                textinput.style.backgroundColor = "#cfa";
+                buttonOn();
+                validate5 = true;
+            }
+            else{
+                textinput.style.backgroundColor = "#f57";
+                buttonOff();
+                validate5 = false;
+            }
+        }
+
+        //BokningsAPI
+        function storeCustomer(event)
+		{
+            event.preventDefault();
+			let input={ 
+				ID: document.getElementById("kontonamn1").value,
+				firstname: document.getElementById("fname").value,
+				lastname: document.getElementById("lname").value,
+				email: document.getElementById("mail").value,
+				address: document.getElementById("number").value,
+				auxdata: document.getElementById("scared").value
+			}
+    
+            fetch('WebprogAPI/Webbprogrammering-Examples-master/booking/makecustomer_XML.php', {
+                method: 'POST', // or 'PUT'
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(input)
+            })
+            .then(function(response) {                      // first then()
+                if(response.ok) return(response.text());
+                throw new Error(response.statusText);
+            }).then(function(text){
+                let divobj = document.getElementById("page2_output1" );
+                let str="<p>Hej "+document.getElementById("kontonamn1").value+"!</p>";
+                divobj.innerHTML=str;
+
+                //ResultBookingCustomer(new window.DOMParser().parseFromString(text, "text/xml"));
+            }).catch(function(error) {                        // catch
+                alert('Registrering misslyckad. Försök igen.');
+            });        
+        }
+
+        function loginCustomer(event)
+		{
+            event.preventDefault();
+			let input={ 
+				customerID: document.getElementById("kontonamn2").value
+			}
+            fetch('WebprogAPI/Webbprogrammering-Examples-master/booking/getcustomer_XML.php', {
+                method: 'POST', // or 'PUT'
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(input)
+            })
+            .then(function(response) {                      // first then()
+                if(response.ok) return(response.text());
+                throw new Error(response.statusText);
+            }).then(function(text){
+
+                // Parse text response as XML document
+                xml_parser = new DOMParser();
+                xml_document = xml_parser.parseFromString(text, "text/xml");
+
+                // Search in your XML document for data that you need (in this example we retreive all 'resource' elements)
+                const xml_nodes = xml_document.querySelectorAll('customer');
+                if(xml_nodes.length>0){
+                    login();
+                }
+                else{
+                    showpage('page2',false);
+                }                
+
+                //ResultBookingCustomer(new window.DOMParser().parseFromString(text, "text/xml"));
+            }).catch(function(error) {                        // catch
+                alert('Request failed\n'+error);
+            });        
+        }
+
+        function login(){
+            showpage('page5',false);
+            let logout = document.getElementById("logout");
+            logout.style.display = "inline-block";
+            let customerbookings = document.getElementById("bokningshistorik");
+            customerbookings.style.display = "inline-block";
+            let searchflight = document.getElementById("sokflygresa");
+            searchflight.style.display = "inline-block";
+
+            username=document.getElementById('kontonamn2').value;
+            localStorage.setItem("username",username);
+        }
+        function logout(){
+            showpage('page1',false);
+            let logout = document.getElementById("logout");
+            logout.style.display = "none";
+            let customerbookings = document.getElementById("bokningshistorik");
+            customerbookings.style.display = "none";
+            let searchflight = document.getElementById("sokflygresa");
+            searchflight.style.display = "none";
+
+            document.getElementById('kontonamn2').value="";
+            localStorage.setItem('username','');
+        }
+
+        function getresources(event){
+            event.preventDefault();
+			let input={
+                type: "a21oscgu",
+				location: document.getElementById("page4_select").value,
+			}
+    
+            fetch('WebprogAPI/Webbprogrammering-Examples-master/booking/getresources_XML.php', {
+                method: 'POST', // or 'PUT'
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(input)
+            })
+            .then(function(response) {                      // first then()
+                if(response.ok) return(response.text());
+                throw new Error(response.statusText);
+            }).then(function(text){
+
+                // Parse text response as XML document
+                xml_parser = new DOMParser();
+                xml_document = xml_parser.parseFromString(text, "text/xml");
+
+                // Search in your XML document for data that you need (in this example we retreive all 'resource' elements)
+                const xml_nodes = xml_document.querySelectorAll('resource');
+                if(xml_nodes.length>0){
+                    let page4_nodeObject1 = document.getElementById("page4_output1");
+                    page4_nodeObject1.innerHTML="";
+                    for (const xml_node of xml_nodes) {
+                        if(xml_node.attributes['location']){
+                            page4_nodeObject1.innerHTML+="<p id='page4_output2'>"+xml_node.attributes['location'].value+"</p>";
+                        }
+                        if(xml_node.attributes['cost']){
+                            page4_nodeObject1.innerHTML+="<p id='page4_output3'>"+xml_node.attributes['cost'].value+" kr</p>";
+                        }
+                        if(xml_node.attributes['id']){
+                            page4_nodeObject1.innerHTML+="<button class='page4_output4' id='"+xml_node.attributes['id'].value+"' onclick='bookResource(event)'>Visa</button>"
+                        }
+                    }
+                }
+
+                //ResultBookingCustomer(new window.DOMParser().parseFromString(text, "text/xml"));
+            }).catch(function(error) {                        // catch
+                alert('Request failed\n'+error);
+            });
+        }
+        let dateobject1;
+        let dateobject2;
+        let size=100;
+        let rightPosition=0;
+        let remaining;
+        function bookResource(event){
+            var input={
+                    //resid:document.getElementById("resIDA").value,
+                    resid:event.target.id,
+                    type:"a21oscgu"		// Only show bookings for your webbapplication using the apptype				
+            };
+            
+            fetch("WebprogAPI/Webbprogrammering-Examples-master/booking/getavailability_search_XML.php", {
+                    method: 'POST', // or 'PUT'
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(input)
+                    })
+                    .then(function(response) {                      // first then()
+                    if(response.ok) return(response.text());
+                    throw new Error(response.statusText);
+                }).then(function(text){
+                        
+                        // Parse text response as XML document
+                        xml_parser = new DOMParser();
+                        xml_document = xml_parser.parseFromString(text, "text/xml");
+
+                        // Search in your XML document for data that you need (in this example we retreive all 'resource' elements)
+                        const xml_nodes = xml_document.querySelectorAll('availability');
+                        if(xml_nodes.length>0){
+                            let page4_nodeObject2 = document.getElementById("page4_book1");
+                            page4_nodeObject2.innerHTML="";
+                            for (const xml_node of xml_nodes) {
+                                if(xml_node.attributes['location']){
+                                    page4_nodeObject2.innerHTML+="<p id='page4_book2'>"+xml_node.attributes['location'].value+"</p>";
+                                }
+                                if(xml_node.attributes['cost']){
+                                    page4_nodeObject2.innerHTML+="<p>Kostnad: "+xml_node.attributes['cost'].value+" kr</p>";
+                                }
+                                if(xml_node.attributes['date']){
+                                    page4_nodeObject2.innerHTML+="<p>Från: "+xml_node.attributes['date'].value+" Till: "+xml_node.attributes['dateto'].value+"</p>";
+                                    dateobject1 = xml_node.attributes['date'].value;
+                                    dateobject2 = xml_node.attributes['dateto'].value;
+                                }
+                                if(xml_node.attributes['remaining']){
+                                    page4_nodeObject2.innerHTML+="<p>"+xml_node.attributes['remaining'].value+" lediga platser kvar.</p>";
+                                    remaining=xml_node.attributes['remaining'].value;
+                                    calculatePosition();
+                                }
+                                page4_nodeObject2.innerHTML+="<button class='page4_output4' id='"+xml_node.attributes['resourceID'].value+"' onclick='makebooking(event)'>Boka flygresa</button>"
+                            }
+                        }
+                            //showAvailability(new window.DOMParser().parseFromString(text, "text/xml"));
+                    }).catch(function(error) {                        // catch
+                        alert('Request failed\n'+error);
+                });
+        }
+
+        function makebooking(event){
+            var input={
+                    resourceID:event.target.id,
+                    date: dateobject1,
+                    dateto: dateobject2,
+                    customerID: document.getElementById("kontonamn2").value,
+                    type:"a21oscgu",
+                    position: rightPosition,
+                    rebate: 1,
+                    status: 2,
+                    auxdata: ""
+            };
+            
+            fetch("WebprogAPI/Webbprogrammering-Examples-master/booking/makebooking_XML.php", {
+                    method: 'POST', // or 'PUT'
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(input)
+                    })
+                    .then(function(response) {                      // first then()
+                    if(response.ok) return(response.text());
+                    throw new Error(response.statusText);
+                }).then(function(text){
+                        // Parse text response as XML document
+                        xml_parser = new DOMParser();
+                        xml_document = xml_parser.parseFromString(text, "text/xml");
+
+                        // Search in your XML document for data that you need (in this example we retreive all 'resource' elements)
+                        const xml_nodes = xml_document.querySelectorAll('result');
+                        if(xml_nodes.length>0){
+                            let page4_nodeObject3 = document.getElementById("page4_book1");
+                            page4_nodeObject3.innerHTML="";
+                            for (const xml_node of xml_nodes) {
+                                if(xml_node.attributes['size']){
+                                    page4_nodeObject3.innerHTML+="<p id='page4_book2'>Bokning genomförd.</p>";
+                                }
+                                else{
+                                    alert("Bokning misslyckad.");
+                                }
+                            }
+                        }
+                            //showAvailability(new window.DOMParser().parseFromString(text, "text/xml"));
+                    }).catch(function(error) {                        // catch
+                        alert('Request failed\n'+error);
+                });
+        }
+        
+        function calculatePosition(){
+            rightPosition=size-remaining;
+            rightPosition+=1;
+        }
+
+        function getCustomerBookings(event){
+
+            var input={
+                    type: "a21oscgu",
+                    customerID : localStorage.getItem("username"),
+            };
+            
+            fetch("WebprogAPI/Webbprogrammering-Examples-master/booking/getcustomerbookings_XML.php", {
+                    method: 'POST', // or 'PUT'
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(input)
+                })
+                    .then(function(response) {                      // first then()
+                    if(response.ok) return(response.text());
+                    throw new Error(response.statusText);
+                }).then(function(text){
+                        
+                        // Parse text response as XML document
+                        xml_parser = new DOMParser();
+                        xml_document = xml_parser.parseFromString(text, "text/xml");
+
+                        // Search in your XML document for data that you need (in this example we retreive all 'resource' elements)
+                        const xml_nodes = xml_document.querySelectorAll('booking');
+                        if(xml_nodes.length>0){
+                            let page5_nodeObject = document.getElementById("page5_content");
+                            page5_nodeObject.innerHTML="";
+                            for (const xml_node of xml_nodes) {
+                                if(xml_node.attributes['application']){
+                                    page5_nodeObject.innerHTML+="<h3 id='page5_content2'>"+xml_node.attributes['location'].value+"</h3>"+
+                                    "<p>Kostnad: "+xml_node.attributes['cost'].value+" kr</p>"+
+                                    "<p>Datum: "+xml_node.attributes['date'].value+"</p>"+
+                                    "<p>Till: "+xml_node.attributes['dateto'].value+"</p><hr>";
+                                }
+                            }
+                        }
+                        else{
+                            alert("Du har inte bokat någon flygresa.");
+                        }
+                            //showAvailability(new window.DOMParser().parseFromString(text, "text/xml"));
+                    }).catch(function(error) {                        // catch
+                        alert('Request failed\n'+error);
+                });
+        }
+
+    </script>
+</body>
+</html>
